@@ -1,0 +1,7 @@
+---------------------------base de Wang
+Bus
+Dinosaures
+Elephants
+Fleurs
+Chevaux
+Montagnes
