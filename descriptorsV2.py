@@ -2,7 +2,11 @@ import numpy as np
 import thisModule as tm
 # --- GROUP 1: GLOBAL FEATURES (Input = Raw Image) ---
 
-def average_color(img):
+def histo(img):
+    hitsreq,binsreq=np.histogram(img,256,[0, 256])
+    return hitsreq
+
+def average_color(img): # brightness
     return np.mean(img)
 
 def variance(image):
@@ -38,7 +42,7 @@ def cooccurence(I):
             CC[pixel_val, neighbor_val] += 1
             
     # OPTIONAL: Normalize GLCM so features don't depend on image size
-    # CC = CC / CC.sum() 
+    CC = CC / CC.sum() 
     return CC
 
 def cooccurence_fast(I):
@@ -75,21 +79,6 @@ def energie_glcm(GLCM):
 
 # --- MASTER FUNCTION ---
 
-def extract_all_features(image):
-    # 1. Global features
-    feat_var = variance(image)
-    feat_ent = entropie(image)
-    
-    # 2. Texture features (Generate GLCM first!)
-    # Ensure image is uint8 for GLCM
-    img_uint8 = (image).astype(int) 
-    glcm_matrix = cooccurence(img_uint8)
-    
-    feat_homo = homogenite_glcm(glcm_matrix)
-    feat_cont = contrast_glcm(glcm_matrix)
-    
-    return [feat_var, feat_ent, feat_homo, feat_cont]
-
 def get_final_vector(image):
     # --- PART 1: First Order (Global) ---
     # Good for lighting and overall complexity
@@ -113,5 +102,7 @@ def get_final_vector(image):
     # --- PART 3: Combine ---
     # This is your data point for Machine Learning
     feature_vector = [var_global, ent_global, contrast_tex, homogen_tex, energy_tex]
-    
+    norm = np.linalg.norm(feature_vector)
+    feature_vector = feature_vector / norm
+
     return np.array(feature_vector)
