@@ -7,7 +7,7 @@ def ImageAsArrayNum(index):
     Image=plt.imread(f'image_database/{index}.jpg')#not suted for png images
     return Image
 
-def ImageAsArray(name,foldername):
+def ImageAsArray(name,foldername):  
     Image=plt.imread(f'{foldername}/{name}')
     return Image
 
@@ -25,6 +25,9 @@ def normalizeImage(I):
 def imageToVector(I:np.ndarray)->np.ndarray:
     return I.flatten()
 
+def histo(img):
+    hitsreq,binsreq=np.histogram(img,256,[0, 256])
+    return hitsreq
 
 def plotFirstFromEachCategory(categoriesCount,CategorySize,lines=2,columns=3):
     image=1
@@ -55,8 +58,8 @@ def plotResults(Dsorted,filename='image_database/',columns=4,resultNumber=8):
 def getImages(nbr_im, filename='image_database/'):
     I=plt.imread(f'{filename}1.jpg')
     nl,nc=rgb2gray(I).shape
-    images=np.zeros((nl,nc,nbr_im))
+    images=np.zeros((nl,nc,nbr_im)).astype(np.uint8)
     for i in range(nbr_im):
-        images[:,:,i]=rgb2gray(plt.imread(f'{filename}{i+1}.jpg'))       
+        images[:,:,i]=rgb2gray(plt.imread(f'{filename}{i+1}.jpg'))   
     return images
 

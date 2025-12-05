@@ -9,7 +9,7 @@ def variance(image):
     return np.var(image)
 
 def entropie(I):
-    counts, _ = np.histogram(I, bins=256, range=(0, 256))
+    counts= tm.histo(I)
     p = counts / counts.sum()
     p = p[p > 0] # remove zeros
     return -np.sum(p * np.log2(p))
@@ -28,7 +28,7 @@ def energie_global(I):
 def cooccurence(I):
     rows, cols = I.shape
     # FIX: Size must be 256x256 to hold values 0-255
-    CC = np.zeros((256, 256))
+    CC = np.zeros((256, 256)).astype(np.uint32)
     
     # Simple Horizontal (0 degree) GLCM
     for i in range(rows):
@@ -41,9 +41,17 @@ def cooccurence(I):
     # CC = CC / CC.sum() 
     return CC
 
+def cooccurence_fast(I):
+    I1 = I[:, :-1].ravel()
+    I2 = I[:, 1:].ravel()
+    CC = np.zeros((256, 256), dtype=np.uint32)
+    np.add.at(CC, (I1, I2), 1)
+    return CC
+
+
 # --- GROUP 3: TEXTURE FEATURES (Input = GLCM Matrix) ---
 
-def contraste_glcm(GLCM):
+def contrast_glcm(GLCM):
     # Input must be the MATRIX from cooccurence(), not the image
     rows, cols = GLCM.shape
     s = 0
@@ -78,7 +86,7 @@ def extract_all_features(image):
     glcm_matrix = cooccurence(img_uint8)
     
     feat_homo = homogenite_glcm(glcm_matrix)
-    feat_cont = contraste_glcm(glcm_matrix)
+    feat_cont = contrast_glcm(glcm_matrix)
     
     return [feat_var, feat_ent, feat_homo, feat_cont]
 
@@ -92,13 +100,13 @@ def get_final_vector(image):
     # Good for patterns (stripes, spots, wood grain)
     
     # 1. Prepare image for GLCM (must be integer 0-255)
-    img_uint8 = (tm.normalizeImage(image) * 255).astype(np.uint8)
+    #img_uint8 = (tm.normalizeImage(image) * 255).astype(np.uint8)
     
     # 2. Generate Matrix
-    matrix = cooccurence(img_uint8)
+    matrix = cooccurence(image)
     
     # 3. Extract Features from Matrix
-    contrast_tex = contraste_glcm(matrix)
+    contrast_tex = contrast_glcm(matrix)
     homogen_tex = homogenite_glcm(matrix)
     energy_tex = energie_glcm(matrix)
     

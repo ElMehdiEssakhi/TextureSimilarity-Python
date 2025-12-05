@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import thisModule as tm
-import descriptors as ds
+#import descriptors as ds
+import descriptorsV2 as desv2
 
 def distance_pixel(query,filename='image_database/',setSize=66,resultNumber=8):
     if(len(query.shape)==3): #to add rgba condition later
@@ -32,86 +33,95 @@ def distance_histogram(query,images,setSize=66,resultNumber=8): #images as a mat
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
 def distance_variance(query,images,setSize=66,resultNumber=8):
-    queryVar=ds.variance(tm.rgb2gray(query))
+    queryVar=desv2.variance(tm.rgb2gray(query))
     D=[]
     for i in range (0,setSize):
-        thisVar=ds.variance(images[:,:,i])
+        thisVar=desv2.variance(images[:,:,i])
         dist=tm.EuclideanDistance(thisVar,queryVar)
         couple=[i+1,dist]
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
-def distance_energie(query,images,setSize=66,resultNumber=8):
-    queryEnergie=ds.energie(tm.rgb2gray(query))
+def distance_energie_global(query,images,setSize=66,resultNumber=8):
+    queryEnergie=desv2.energie_global(tm.rgb2gray(query))
     D=[]
     for i in range (0,setSize):
-        thisEnergie=ds.energie(images[:,:,i])
+        thisEnergie=desv2.energie_global(images[:,:,i])
         dist=tm.EuclideanDistance(thisEnergie,queryEnergie)
         couple=[i+1,dist]
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
 def disatance_entropie(query,images,setSize=66,resultNumber=8):
-    queryEntropie=ds.entropie(tm.rgb2gray(query))
+    queryEntropie=desv2.entropie(tm.rgb2gray(query))
     D=[]
     for i in range (0,setSize):
-        thisEntropie=ds.entropie(images[:,:,i])
+        thisEntropie=desv2.entropie(images[:,:,i])
         dist=tm.EuclideanDistance(thisEntropie,queryEntropie)
         couple=[i+1,dist]
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]       
 
-def distance_contraste(query,images,setSize=66,resultNumber=8):
-    q_norm = tm.normalizeImage(tm.rgb2gray(query))
-    q_uint8 = (q_norm * 255).astype(np.uint8) 
-    queryContraste = ds.contraste(q_uint8)
-    
+def distance_contraste_rms(query,images,setSize=66,resultNumber=8):
+    queryContraste = desv2.contrast_rms(tm.rgb2gray(query))
     D=[]
     for i in range (0,setSize):
-        img_norm = tm.normalizeImage(images[:,:,i])
-        img_uint8 = (img_norm * 255).astype(np.uint8)
-        thisContraste=ds.contraste(img_uint8)
+        thisContraste=desv2.contrast_rms(images[:,:,i])
 
         dist=tm.EuclideanDistance(thisContraste,queryContraste)
         couple=[i+1,dist]
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
-def distance_homogenite(query,images,setSize=66,resultNumber=8):
-    queryHomogenite=ds.homogenite(tm.rgb2gray(query))
-    D=[]
-    for i in range (0,setSize):
-        thisHomogenite=ds.homogenite(images[:,:,i])
-        dist=tm.EuclideanDistance(thisHomogenite,queryHomogenite)
-        couple=[i+1,dist]
-        D.append(couple)
-    return sorted(D, key=lambda item: item[1])[:resultNumber]
-
 def distance_average_color(query,images,setSize=66,resultNumber=8):
-    queryAvgColor=ds.average_color(tm.normalizeImage(tm.rgb2gray(query)))
+    queryAvgColor=desv2.average_color(tm.rgb2gray(query))
     D=[]
     for i in range (0,setSize):
-        thisAvgColor=ds.average_color(tm.normalizeImage(images[:,:,i]))
+        thisAvgColor=desv2.average_color(images[:,:,i])
         dist=tm.EuclideanDistance(thisAvgColor,queryAvgColor)
         couple=[i+1,dist]
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
-def distance_texture(query,images,setSize=66,resultNumber=8):
-    queryTexture=tm.ds.texture(tm.normalizeImage(tm.rgb2gray(query)))
+def distance_contrast_glcm(query,images,setSize=66,resultNumber=8):
+    cooc=desv2.cooccurence(tm.rgb2gray(query))
+    queryContrast=desv2.contrast_glcm(cooc)
     D=[]
     for i in range (0,setSize):
-        thisTexture=tm.ds.texture(tm.normalizeImage(images[:,:,i]))
+        thisCooc=desv2.cooccurence(images[:,:,i])
+        thisContrast=desv2.contrast_glcm(thisCooc)
+        dist=tm.EuclideanDistance(queryContrast,thisContrast)
+        couple=[i+1,dist]
+        D.append(couple)
+    return sorted(D, key=lambda item: item[1])[:resultNumber]
+
+def distance_homogenite_glcm(query,images,setSize=66,resultNumber=8):
+    cooc=desv2.cooccurence(tm.rgb2gray(query))
+    queryHomogenite=desv2.homogenite_glcm(cooc)
+    D=[]
+    for i in range (0,setSize):
+        thisCooc=desv2.cooccurence(images[:,:,i])
+        thisHomogenite=desv2.homogenite_glcm(thisCooc)
+        dist=tm.EuclideanDistance(thisHomogenite,queryHomogenite)
+        couple=[i+1,dist]
+        D.append(couple)
+    return sorted(D, key=lambda item: item[1])[:resultNumber]
+
+def distance_texture(query,images,setSize=66,resultNumber=8):
+    queryTexture=desv2.get_final_vector(tm.rgb2gray(query))
+    D=[]
+    for i in range (0,setSize):
+        thisTexture=desv2.get_final_vector(images[:,:,i])
         dist=tm.EuclideanDistance(thisTexture,queryTexture)
         couple=[i+1,dist]
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
 def distance_cooccurence(query,images,setSize=66,resultNumber=8):
-    queryCooccurence=ds.cooccurence(tm.normalizeImage(tm.rgb2gray(query)*255).astype(np.uint8))
+    queryCooccurence=desv2.cooccurence(tm.rgb2gray(query))
     D=[]
     for i in range (0,setSize):
-        thisCooccurence=ds.cooccurence(tm.normalizeImage(images[:,:,i]*255).astype(np.uint8))
+        thisCooccurence=desv2.cooccurence(images[:,:,i])
         dist=tm.EuclideanDistance(thisCooccurence.flatten(),queryCooccurence.flatten())
         couple=[i+1,dist]
         D.append(couple)
