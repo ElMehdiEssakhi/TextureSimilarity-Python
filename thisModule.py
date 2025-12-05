@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import descriptors as ds
 
 
 def ImageAsArrayNum(index):
