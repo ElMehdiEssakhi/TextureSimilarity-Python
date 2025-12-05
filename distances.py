@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import thisModule as tm
 #import descriptors as ds
 import descriptorsV2 as desv2
@@ -21,12 +20,12 @@ def distance_pixel(query,filename='image_database/',setSize=66,resultNumber=8):
 def distance_histogram(query,images,setSize=66,resultNumber=8): #images as a matrix
     if len(query.shape)==3:
         gray=tm.rgb2gray(query)
-        queryHist=tm.ds.histo(gray)/gray.size
+        queryHist=desv2.histo(gray)/gray.size
     else:
-        queryHist=tm.ds.histo(query)/query.size
+        queryHist=desv2.histo(query)/query.size
     D=[]
     for i in range (0,setSize):
-        thisHist=tm.ds.histo(images[:,:,i])/images[:,:,i].size
+        thisHist=desv2.histo(images[:,:,i])/images[:,:,i].size
         dist=tm.EuclideanDistance(thisHist,queryHist)
         couple=[i+1,dist]
         D.append(couple)
@@ -107,6 +106,16 @@ def distance_homogenite_glcm(query,images,setSize=66,resultNumber=8):
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
+def distance_cooccurence(query,images,setSize=66,resultNumber=8):
+    queryCooccurence=desv2.cooccurence(tm.rgb2gray(query))
+    D=[]
+    for i in range (0,setSize):
+        thisCooccurence=desv2.cooccurence(images[:,:,i])
+        dist=tm.EuclideanDistance(thisCooccurence.flatten(),queryCooccurence.flatten())
+        couple=[i+1,dist]
+        D.append(couple)
+    return sorted(D, key=lambda item: item[1])[:resultNumber]
+
 def distance_texture(query,images,setSize=66,resultNumber=8):
     queryTexture=desv2.get_final_vector(tm.rgb2gray(query))
     D=[]
@@ -117,12 +126,10 @@ def distance_texture(query,images,setSize=66,resultNumber=8):
         D.append(couple)
     return sorted(D, key=lambda item: item[1])[:resultNumber]
 
-def distance_cooccurence(query,images,setSize=66,resultNumber=8):
-    queryCooccurence=desv2.cooccurence(tm.rgb2gray(query))
-    D=[]
-    for i in range (0,setSize):
-        thisCooccurence=desv2.cooccurence(images[:,:,i])
-        dist=tm.EuclideanDistance(thisCooccurence.flatten(),queryCooccurence.flatten())
-        couple=[i+1,dist]
-        D.append(couple)
-    return sorted(D, key=lambda item: item[1])[:resultNumber]
+def distance_texture_precomputed(imgId, precomputed_features,resultNumber=8):
+    img_features = precomputed_features[imgId-1]
+    distances = []
+    for i,features in enumerate(precomputed_features):
+        dist = tm.EuclideanDistance(img_features, features)
+        distances.append((i+1, dist))
+    return sorted(distances, key=lambda item: item[1])[:resultNumber]
