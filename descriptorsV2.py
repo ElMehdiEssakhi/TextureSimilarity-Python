@@ -106,3 +106,8 @@ def get_final_vector(image):
     feature_vector = feature_vector / norm
 
     return np.array(feature_vector)
+
+def preComputeAllImagesFeaturesVector(images):
+    # Precompute once
+    precomputed = [get_final_vector(images[:,:,i]) for i in range(66)]
+    return np.array(precomputed)
