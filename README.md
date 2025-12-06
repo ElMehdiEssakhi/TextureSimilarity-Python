@@ -45,7 +45,7 @@ This project implements and evaluates various image similarity search techniques
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/ElMehdiEssakhi/TextureSimilarity-Python
 cd TextureSimilarity-Python
 ```
 
