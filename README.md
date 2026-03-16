@@ -2,7 +2,7 @@
 
 A comprehensive Python project for finding visually similar images in a dataset using multiple distance metrics and texture analysis algorithms.
 
-## 📋 Overview
+## Overview
 
 This project implements and evaluates various image similarity search techniques, from simple pixel-based comparisons to advanced texture feature extraction using GLCM (Gray-Level Co-occurrence Matrix). The work includes:
 
@@ -11,7 +11,7 @@ This project implements and evaluates various image similarity search techniques
 - **Educational notebooks** explaining key concepts like normalization and contrast
 - **Performance optimization** through feature precomputation
 
-## 🎯 Key Features
+## Key Features
 
 ### Distance Metrics Implemented
 
@@ -34,7 +34,7 @@ This project implements and evaluates various image similarity search techniques
 - JPEG format for efficient processing
 
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -63,7 +63,7 @@ Key packages:
 
 See `requirements.txt` for complete list.
 
-## 📖 Usage
+## Usage
 
 ### Quick Start: Similarity Search
 
@@ -121,7 +121,7 @@ dist.distance_cooccurence(query_image, all_images)
 dist.distance_texture_precomputed(image_id, precomputed_features)
 ```
 
-## 📊 Experiment Results
+## Experiment Results
 
 ### Phase 1: Baseline Metrics
 
@@ -137,14 +137,14 @@ dist.distance_texture_precomputed(image_id, precomputed_features)
 |--------|-----------|
 | Energy Distance | 4/8 |
 | Entropy Distance | 4/8 |
-| **Variance Distance** | **6/8** ⭐ |
+| **Variance Distance** | **6/8**  |
 | Contrast (GLCM) | 3/8 |
-| **Homogeneity (GLCM)** | **6/8** ⭐ |
+| **Homogeneity (GLCM)** | **6/8**  |
 | Co-occurrence Matrix | 2/8 |
 
 **Best Performers:** Variance and GLCM Homogeneity metrics achieve 6/8 precision.
 
-## 🧠 Educational Notebooks
+## Educational Notebooks
 
 ### 1. Explaining Pixel Normalization (`explainingPixelNormalization.ipynb`)
 
@@ -154,7 +154,7 @@ dist.distance_texture_precomputed(image_id, precomputed_features)
 
 **Key Insight:** How normalization enables resolution-invariant comparison
 
-## 🔧 Core Modules
+## Core Modules
 
 ### `thisModule.py`
 
@@ -195,7 +195,7 @@ Feature extraction algorithms:
 
 Distance metric implementations for similarity search.
 
-## 🎓 How It Works
+## How It Works
 
 ### Image Comparison Pipeline
 
@@ -216,7 +216,7 @@ The project uses a hybrid approach combining:
 
 This combination captures both global image properties and local texture characteristics.
 
-## ⚙️ Configuration
+## Configuration
 
 ### Image Database Format
 
@@ -234,14 +234,14 @@ def plotFirstFromEachCategory(categoriesCount, CategorySize, lines=2, columns=3)
     # Adjust categoriesCount and CategorySize as needed
 ```
 
-## 📈 Performance Notes
+## Performance Notes
 
 - **Precomputation:** One-time feature extraction takes ~5-10 seconds for 66 images
 - **Query Time (without precomputation):** ~1-2 seconds per query
 - **Query Time (with precomputation):** ~100-200ms per query
 - **Memory Usage:** ~10MB for precomputed feature vectors
 
-## 🔍 Limitations & Future Work
+## Limitations & Future Work
 
 ### Current Limitations
 
@@ -259,15 +259,15 @@ def plotFirstFromEachCategory(categoriesCount, CategorySize, lines=2, columns=3)
 - [ ] Hybrid ensemble of best-performing metrics
 - [ ] Speed optimization with spatial hashing (LSH)
 
-## 📝 License
+## License
 
 This project is provided as-is for learning purposes. Use and modify freely.
 
-## 👤 Author
+## Author
 
 EL MEHDI ES-SAKHI
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
 
